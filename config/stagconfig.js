@@ -6,7 +6,7 @@ dotenv.config();
 const config = {
 	environment: process.env.NODE_ENV || "development", // Default to development
 	port: process.env.PORT || 5000, // Default server port
-	cron_days: process.env.UPDATE_DAYS || 1, // Default days is one day change in 
+	cronDays: process.env.UPDATE_DAYS || 1, // Default days is one day change in
 	db: {
 		host: process.env.POSTGRES_HOST || "localhost",
 		port: process.env.POSTGRES_PORT || 5432,

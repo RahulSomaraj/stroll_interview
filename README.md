@@ -53,7 +53,7 @@ Redis caches the region-specific data, allowing for faster responses and reducin
 
 ## Cron Jobs
 
-The system uses cron jobs to regularly update question indices in the database. These jobs ensure that even if the server goes down, the data remains up-to-date and the system functions smoothly. If a region’s questions are exhausted, the index resets to 0, ensuring continuous data availability.
+The system uses cron jobs to regularly update question indices in the database.
 
 ## Summary
 

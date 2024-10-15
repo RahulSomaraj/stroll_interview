@@ -1,33 +1,47 @@
-const {
-	Entity,
-	PrimaryGeneratedColumn,
-	Column,
-	CreateDateColumn,
-	DeleteDateColumn,
-	Index,
-} = require("typeorm");
-const Region = require("./region");
+const { EntitySchema } = require("typeorm");
+const Region = require("./regions");
 
-@Entity("questions")
-class Question {
-	@PrimaryGeneratedColumn()
-	id; // Automatically generated ID
-
-	@Column({ type: "varchar", length: 255, unique: true }) // Ensuring region names are unique
-	question;
-
-	//add options and answers if required based on requirements of projects
-
-	@Index()
-	@ManyToOne(() => Region, (region) => region.id) // Foreign key relationship
-	@JoinColumn({ name: "regionId" })
-	region;
-
-	@CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" }) // Automatically set the createdAt date
-	createdAt;
-
-	@DeleteDateColumn({ type: "timestamp", nullable: true }) // Nullable deletedAt for soft deletes
-	deletedAt;
-}
-
-module.exports = Question;
+module.exports = new EntitySchema({
+	name: "Question", // Entity name
+	tableName: "questions", // Correct property for the table name
+	columns: {
+		id: {
+			primary: true,
+			type: "int",
+			generated: true, // Automatically generated ID
+		},
+		question: {
+			type: "varchar", // Add answers is required
+			length: 255,
+		},
+		question_index: {
+			type: "int",
+		},
+		created_at: {
+			type: "timestamp",
+			createDate: true, // Automatically set the createdAt date
+			default: () => "CURRENT_TIMESTAMP",
+		},
+		deleted_at: {
+			type: "timestamp",
+			nullable: true, // Nullable deletedAt for soft deletes
+			deleteDate: true,
+		},
+	},
+	relations: {
+		region_id: {
+			type: "many-to-one",
+			target: Region, // Reference to the actual `Region` model
+			joinColumn: {
+				name: "region_id", // Optional: You can specify the name of the foreign key column
+			},
+			inverseSide: "questions", // Should match the relation name in the `Region` entity
+		},
+	},
+	indices: [
+		{
+			name: "IDX_QUESTION_REGION_ID", // Name of the index
+			columns: ["region_id"], // Index on the foreign key regionId
+		},
+	],
+});

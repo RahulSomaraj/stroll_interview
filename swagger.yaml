@@ -5,9 +5,16 @@ info:
   description: API documentation for my Express application
 paths:
   /api/question:
-    post:
-      summary: Example POST endpoint
+    get:
+      summary: Example Get endpoint
       description: This endpoint does not require a request body.
+      parameters:
+        - name: region
+          in: query
+          required: false
+          description: An example query parameter.
+          schema:
+            type: string
       responses:
         "200":
           description: Success

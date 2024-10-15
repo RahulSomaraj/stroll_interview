@@ -4,6 +4,9 @@ const morgan = require("morgan");
 const cors = require("cors");
 const helmet = require("helmet"); // Import helmet
 const redis = require("redis"); // Import redis
+const swaggerUi = require("swagger-ui-express");
+const YAML = require("yamljs");
+const path = require("path");
 
 const apiRoutes = require("./routes/api");
 const redisService = require("./utils/redisServer"); // Import Redis service
@@ -11,9 +14,7 @@ const { startCronJobs } = require("./crons/cron"); // Import Redis service
 const config = require("./config/stagconfig");
 const { HttpExceptionFilter } = require("./middlewares/errorMiddleware");
 const { HttpException } = require("./middlewares/httpException");
-const swaggerUi = require("swagger-ui-express");
-const YAML = require("yamljs");
-const path = require("path");
+const { getDataSourceInstance } = require("./utils/db"); // Import the centralized connection
 
 // Load environment variables
 dotenv.config();
@@ -49,6 +50,10 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => globalHandler.catch(err, req, res, next));
 
 startCronJobs();
+process.on("SIGINT", async () => {
+	await redisService.close();
+	process.exit(0);
+});
 
 // Start the server
 app.listen(config.port, () => {
